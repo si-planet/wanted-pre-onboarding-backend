@@ -21,5 +21,35 @@ public class JobPostDTO {
     private String title;               // 채용 제목
     private String contents;            // 채용 내용
     private LocalDateTime created;      // 채용 공고 게시일
+    private String comp_nm;             // 회사 이름
 
+    public static JobPostDTO toJobPostDTOAll(JobPostEntity jpe) {
+        JobPostDTO dto = new JobPostDTO();
+
+        dto.setJp_num(jpe.getJpNum());
+        dto.setRegion(jpe.getRegion());
+        dto.setTechnic(jpe.getTechnic());
+        dto.setTitle(jpe.getTitle());
+        dto.setCreated(jpe.getCreated());
+        dto.setComp_nm(jpe.getCe().getCompNm());
+
+        return dto;
+    }
+
+    public static JobPostDTO toJobPostDTO(JobPostEntity jpe) {
+        JobPostDTO dto = new JobPostDTO();
+
+        dto.setJp_num(jpe.getJpNum());
+        dto.setNation(jpe.getNation());
+        dto.setRegion(jpe.getRegion());
+        dto.setPosition(jpe.getPosition());
+        dto.setRewards(jpe.getRewards());
+        dto.setTechnic(jpe.getTechnic());
+        dto.setTitle(jpe.getTitle());
+        dto.setContents(jpe.getContents());
+        dto.setCreated(jpe.getCreated());
+        dto.setComp_nm(jpe.getCe().getCompNm());
+
+        return dto;
+    }
 }

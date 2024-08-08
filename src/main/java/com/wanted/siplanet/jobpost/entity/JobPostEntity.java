@@ -41,7 +41,7 @@ public class JobPostEntity extends BaseEntity {
     @JoinColumn(name = "comp_id")
     private CompanyEntity ce;
 
-    public static JobPostEntity toSaveEntity(JobPostDTO dto){
+    public static JobPostEntity toSaveEntity(JobPostDTO dto, CompanyEntity ce){
         JobPostEntity jp = new JobPostEntity();
 
         jp.setNation(dto.getNation());
@@ -51,6 +51,7 @@ public class JobPostEntity extends BaseEntity {
         jp.setTechnic(dto.getTechnic());
         jp.setTitle(dto.getTitle());
         jp.setContents(dto.getContents());
+        jp.setCe(ce);
 
         return jp;
     }
