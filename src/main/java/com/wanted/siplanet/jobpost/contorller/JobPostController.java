@@ -2,6 +2,7 @@ package com.wanted.siplanet.jobpost.contorller;
 
 import com.wanted.siplanet.jobpost.dto.JobPostDTO;
 import com.wanted.siplanet.jobpost.entity.CompanyEntity;
+import com.wanted.siplanet.jobpost.entity.JobPostEntity;
 import com.wanted.siplanet.jobpost.service.JobPostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -21,10 +22,9 @@ public class JobPostController {
      *  채용 공고 작성
      */
     @PostMapping("/jobpost/post")
-    @ResponseBody
     public String jobPostCreate (@RequestBody JobPostDTO dto, @RequestBody CompanyEntity ce) {
-        jobPostService.jobPostCreate(dto, ce);
-        return "redirect:/jobpost/get";
+        JobPostEntity jobPostEntity = jobPostService.jobPostCreate(dto, ce);
+        return "redirect:/jobpost/get/"+jobPostEntity.getJpNum();
     }
 
     /**
