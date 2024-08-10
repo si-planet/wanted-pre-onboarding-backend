@@ -67,7 +67,7 @@ public class JobPostService {
         return jobPostRepository.findByComp(compId, jpNum);
     }
 
-    public JobPostEntity modify(Long jpNum, JobPostDTO dto) {
+    public JobPostEntity update(Long jpNum, JobPostDTO dto) {
         JobPostEntity jpe = jobPostRepository.findById(jpNum).get();
 
         jpe.setNation(dto.getNation());
@@ -79,5 +79,12 @@ public class JobPostService {
         jpe.setContents(dto.getContents());
 
         return jobPostRepository.save(jpe);
+    }
+
+    public void delete(Long jpNum) {
+        if(jobPostRepository.findById(jpNum).isPresent())
+            jobPostRepository.delete(jobPostRepository.findById(jpNum).get());
+        else
+            throw new RuntimeException("해당 게시물은 존재하지 않습니다.");
     }
 }

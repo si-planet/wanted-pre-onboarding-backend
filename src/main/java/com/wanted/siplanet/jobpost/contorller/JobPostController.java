@@ -55,10 +55,19 @@ public class JobPostController {
      */
     @PutMapping("/jobpost/detail/{id}")
     public String jobPostUpdate (@PathVariable Long id, @RequestBody JobPostDTO dto) {
-        jobPostService.modify(id, dto);
+        jobPostService.update(id, dto);
 
         return "redirect:/jobpost/detail/" +  id;
     }
 
+    /**
+     *  채용 공고 삭제
+     */
+    @DeleteMapping("/jobpost/detail/{id}")
+    public String jobPostDelete (@PathVariable Long id) {
+        jobPostService.delete(id);
+
+        return "redirect:/jobpost/all";
+    }
 
 }
