@@ -14,11 +14,14 @@ public interface JobPostRepository extends JpaRepository<JobPostEntity, Long> {
     @Query(value = "select j.jpNum from JobPostEntity j where j.ce.compId = :compId and j.jpNum != :jpNum")
     List<Long> findByComp(@Param("compId") String compId, @Param("jpNum") Long jpNum);
 
-    @Query(value = "SELECT j.* FROM jobpost j " +
-                    "JOIN company c ON j.comp_id = c.comp_id " +
-                    "WHERE MATCH(j.nation, j.region, j.position, j.technic, j.title, j.contents) " +
-                    "AGAINST (:keyword IN BOOLEAN MODE) " +
-                    "OR MATCH(c.comp_nm) AGAINST (:keyword IN BOOLEAN MODE)", nativeQuery = true)
-    List<JobPostEntity> searchByKeyword(@Param("keyword") String keyword);
+    @Query("SELECT j FROM JobPostEntity j WHERE " +
+            "j.nation LIKE %:keyword% OR " +
+            "j.region LIKE %:keyword% OR " +
+            "j.position LIKE %:keyword% OR " +
+            "j.technic LIKE %:keyword% OR " +
+            "j.title LIKE %:keyword% OR " +
+            "j.contents LIKE %:keyword% OR " +
+            "j.ce.compId LIKE %:keyword%")
+    List<JobPostEntity> findByKeywordContaining(@Param("keyword") String search);
 
 }

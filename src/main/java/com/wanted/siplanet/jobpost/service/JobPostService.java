@@ -23,8 +23,13 @@ public class JobPostService {
     }
 
 
-    public List<JobPostDTO> findAll() {
-        List<JobPostEntity> eList = jobPostRepository.findAll();
+    public List<JobPostDTO> findList(String search) {
+        List<JobPostEntity> eList;
+        if(search==null || search.trim().isEmpty())
+            eList = jobPostRepository.findAll();
+        else
+            eList = jobPostRepository.findByKeywordContaining(search);
+
         List<JobPostDTO> dtoList = new ArrayList<>();
 
         for(JobPostEntity jpe : eList){
@@ -62,15 +67,17 @@ public class JobPostService {
         return jobPostRepository.findByComp(compId, jpNum);
     }
 
+    public JobPostEntity modify(Long jpNum, JobPostDTO dto) {
+        JobPostEntity jpe = jobPostRepository.findById(jpNum).get();
 
-    public List<JobPostDTO> search(String keyword) {
-        List<JobPostEntity> entityList = jobPostRepository.searchByKeyword(keyword);
-        List<JobPostDTO> dtoList = new ArrayList<>();
+        jpe.setNation(dto.getNation());
+        jpe.setRegion(dto.getRegion());
+        jpe.setPosition(dto.getPosition());
+        jpe.setRewards(dto.getRewards());
+        jpe.setTechnic(dto.getTechnic());
+        jpe.setTitle(dto.getTitle());
+        jpe.setContents(dto.getContents());
 
-        for(JobPostEntity jpe : entityList){
-            dtoList.add(JobPostDTO.toJobPostDTO(jpe));
-        }
-
-        return dtoList;
+        return jobPostRepository.save(jpe);
     }
 }

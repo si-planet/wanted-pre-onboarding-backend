@@ -24,18 +24,18 @@ public class JobPostController {
     @PostMapping("/jobpost/post")
     public String jobPostCreate (@RequestBody JobPostDTO dto, @RequestBody CompanyEntity ce) {
         JobPostEntity jobPostEntity = jobPostService.jobPostCreate(dto, ce);
-        return "redirect:/jobpost/get/"+jobPostEntity.getJpNum();
+        return "redirect:/jobpost/detail/"+jobPostEntity.getJpNum();
     }
 
     /**
-     *  채용 공고 목록 확인
+     *  채용 공고 목록 확인 + 검색
      */
-    @GetMapping("/jobpost/get")
+    @GetMapping("/jobpost/all")
     @ResponseBody
-    public Map<String, Object> jobPostList () {
+    public Map<String, Object> jobPostList (@RequestParam String search) {
         Map<String, Object> result = new HashMap<>();
 
-        List<JobPostDTO> list = jobPostService.findAll();
+        List<JobPostDTO> list = jobPostService.findList(search);
         result.put("list", list);
 
         return result;
@@ -44,19 +44,20 @@ public class JobPostController {
     /**
      *  채용 공고 상세
      */
-    @GetMapping("/jobpost/get/{id}")
+    @GetMapping("/jobpost/detail/{id}")
     @ResponseBody
     public Object jobPostDetail (@PathVariable Long id) {
         return jobPostService.findDetails(id);
     }
 
     /**
-     *  채용 공고 검색
+     *  채용 공고 수정
      */
-    @GetMapping("/jobpost/search")
-    @ResponseBody
-    public List<JobPostDTO> jobPostSearch (@RequestParam String keyword) {
-        return jobPostService.search(keyword);
+    @PutMapping("/jobpost/detail/{id}")
+    public String jobPostUpdate (@PathVariable Long id, @RequestBody JobPostDTO dto) {
+        jobPostService.modify(id, dto);
+
+        return "redirect:/jobpost/detail/" +  id;
     }
 
 
