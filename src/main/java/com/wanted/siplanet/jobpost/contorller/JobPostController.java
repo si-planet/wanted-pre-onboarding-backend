@@ -64,8 +64,8 @@ public class JobPostController {
      *  채용 공고 삭제
      */
     @DeleteMapping("/jobpost/detail/{id}")
-    public String jobPostDelete (@PathVariable Long id) {
-        jobPostService.delete(id);
+    public String jobPostDelete (@PathVariable Long id, @RequestParam CompanyEntity ce) {
+        jobPostService.delete(id, ce);
 
         return "redirect:/jobpost/all";
     }

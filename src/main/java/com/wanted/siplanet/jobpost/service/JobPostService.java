@@ -3,6 +3,7 @@ package com.wanted.siplanet.jobpost.service;
 import com.wanted.siplanet.jobpost.dto.JobPostDTO;
 import com.wanted.siplanet.jobpost.entity.CompanyEntity;
 import com.wanted.siplanet.jobpost.entity.JobPostEntity;
+import com.wanted.siplanet.jobpost.repository.CompanyRepository;
 import com.wanted.siplanet.jobpost.repository.JobPostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.*;
 public class JobPostService {
 
     private final JobPostRepository jobPostRepository;
+    private final CompanyRepository companyRepository;
 
     public JobPostEntity jobPostCreate(JobPostDTO dto, CompanyEntity ce) {
         JobPostEntity jobPostEntity = JobPostEntity.toSaveEntity(dto, ce);
@@ -33,7 +35,7 @@ public class JobPostService {
         List<JobPostDTO> dtoList = new ArrayList<>();
 
         for(JobPostEntity jpe : eList){
-            dtoList.add(JobPostDTO.toJobPostDTOAll(jpe));
+            dtoList.add(findById(jpe.getJpNum()));
         }
 
         return dtoList;
@@ -54,7 +56,12 @@ public class JobPostService {
     private JobPostDTO findById(Long jpNum) {
         Optional<JobPostEntity> optionalJpe = jobPostRepository.findById(jpNum);
         if(optionalJpe.isPresent()){
-            return JobPostDTO.toJobPostDTO(optionalJpe.get());
+            JobPostDTO dto = JobPostDTO.toJobPostDTO(optionalJpe.get());
+
+            Optional<CompanyEntity> byId = companyRepository.findById(optionalJpe.get().getCe().getCompId());
+            dto.setComp_nm(byId.get().getCompNm());
+
+            return dto;
         } else {
             return null;
         }
@@ -81,10 +88,16 @@ public class JobPostService {
         return jobPostRepository.save(jpe);
     }
 
-    public void delete(Long jpNum) {
-        if(jobPostRepository.findById(jpNum).isPresent())
-            jobPostRepository.delete(jobPostRepository.findById(jpNum).get());
-        else
+    public void delete(Long jpNum, CompanyEntity ce) {
+        Optional<JobPostEntity> byId = jobPostRepository.findById(jpNum);
+        if(byId.isPresent()){
+            String contentsId = byId.get().getCe().getCompId();
+            if(contentsId.equals(ce.getCompId()))
+                jobPostRepository.delete(byId.get());
+            else
+                throw new RuntimeException("해당 게시물에 삭제 권한이 없습니다.");
+        } else {
             throw new RuntimeException("해당 게시물은 존재하지 않습니다.");
+        }
     }
 }

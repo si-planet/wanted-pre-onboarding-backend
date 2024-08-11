@@ -48,7 +48,6 @@ public class JobPostDTO {
         dto.setTitle(jpe.getTitle());
         dto.setContents(jpe.getContents());
         dto.setCreated(jpe.getCreated());
-        dto.setComp_nm(jpe.getCe().getCompNm());
 
         return dto;
     }
