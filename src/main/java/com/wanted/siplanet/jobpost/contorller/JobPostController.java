@@ -21,7 +21,7 @@ public class JobPostController {
     /**
      *  채용 공고 작성
      */
-    @PostMapping("/jobpost/post")
+    @PostMapping("/jobpost")
     public String jobPostCreate (@RequestBody JobPostDTO dto, @RequestBody CompanyEntity ce) {
         JobPostEntity jobPostEntity = jobPostService.jobPostCreate(dto, ce);
         return "redirect:/jobpost/detail/"+jobPostEntity.getJpNum();
